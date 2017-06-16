@@ -9,6 +9,7 @@ public  class Livro {
 	private String numeroEdicao;
 	private int paginas;
 	private String autor;
+	private String editora;
 	Livro(){
 		this.codigo="";
 		this.nome="";
@@ -17,6 +18,7 @@ public  class Livro {
 		this.genero="";
 		this.numeroEdicao="";
 		this.paginas=0;
+		this.editora="";
 	}
 	
 	public String getCodigo() {
@@ -50,7 +52,9 @@ public  class Livro {
 	public String getNumeroEdicao() {
 		return this.numeroEdicao;
 	}
-
+	public String getEditora(){
+		return this.editora;
+	}
 	public void setCodigo(String cod) {
 		this.codigo=cod;
 	}
@@ -81,5 +85,7 @@ public  class Livro {
 	public void estocar(int est){
 		this.estoque=this.estoque+est;
 	}
-
+	public void setEditora(String ed)
+		this.editora=ed;
+	}
 }
