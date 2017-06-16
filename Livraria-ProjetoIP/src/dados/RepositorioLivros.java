@@ -7,4 +7,5 @@ public interface RepositorioLivros {
 	void inserir(Livro livro);
 	void remover(Livro livro);
 	void atualizar(Livro livro);
+	boolean existe (Livro livro)
 }
