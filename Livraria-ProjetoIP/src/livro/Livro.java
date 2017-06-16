@@ -8,7 +8,7 @@ public  class Livro {
 	private String genero;
 	private String numeroEdicao;
 	private int paginas;
-	
+	private String autor;
 	Livro(){
 		this.codigo="";
 		this.nome="";
@@ -44,8 +44,9 @@ public  class Livro {
 	public String getGenero() {
 		return this.genero;
 	}
-
-	
+	public String getAutor(){
+		return this.autor;
+	}
 	public String getNumeroEdicao() {
 		return this.numeroEdicao;
 	}
@@ -74,7 +75,9 @@ public  class Livro {
 	public void setNumeroPaginas(int pag) {
 		this.paginas=pag;
 	}
-	
+	public void setAutor(String autor){
+		this.autor=autor;
+	}
 	public void estocar(int est){
 		this.estoque=this.estoque+est;
 	}
