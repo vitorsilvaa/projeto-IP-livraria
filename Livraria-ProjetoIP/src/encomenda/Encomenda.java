@@ -1,35 +1,52 @@
 package encomenda;
 
+import livro.Livro;
+import pessoas.Endereco;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class Encomenda {
-	private Produto produto;
+	private Livro livro;
 	private boolean opcaoEntrega;	// true -> entrega em casa; false -> entrega na loja.
-	private String enderecoEntrega;
+	private Endereco enderecoEntrega;
 	private int prazoEntrega;		// prazo de entrega em dias corridos
 	private String dataPedido;		// data em que o pedido foi realizado
 	private String statusEntrega;	// "a caminho", "entregue" ou "cancelado"
 	private double valorFrete;
+	private String numeroPedido;	// não será inicializado no construtor, e sim no método "novaEncomenda" do CadastroEncomendas
 	
 	
-	public Encomenda(Produto produto, boolean opcaoEntrega, String enderecoEntrega, int prazoEntrega, String dataPedido,
-			String statusEntrega, double valorFrete) {
+	public Encomenda(Livro livro, boolean opcaoEntrega, Endereco enderecoEntrega, int prazoEntrega, double valorFrete) {
 		super();
-		this.produto = produto;
+		this.livro = livro;
 		this.opcaoEntrega = opcaoEntrega;
 		this.enderecoEntrega = enderecoEntrega;
-		this.prazoEntrega = prazoEntrega;
-		this.dataPedido = dataPedido;
-		this.statusEntrega = statusEntrega;
+		this.statusEntrega = "a caminho";	// no momento em que uma encomenda eh criada, considera-se que o pedido esta a caminho
 		this.valorFrete = valorFrete;
+		
+		if(!enderecoEntrega.getPais().equals("Brasil")){
+			this.prazoEntrega = 30;			
+		}else if(!enderecoEntrega.getEstado().equals("Pernambuco")){
+			this.prazoEntrega = 15;
+		}else{
+			this.prazoEntrega = 7;
+		}
+		
+		// A data do pedido é a data do sistema no momento de criação de uma nova encomenda:
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDate dataAtual = LocalDate.now();
+		this.dataPedido = dtf.format(dataAtual);
 	}
 
 
-	public Produto getProduto() {
-		return produto;
+	public Livro getLivro() {
+		return livro;
 	}
 
 
-	public void setProduto(Produto produto) {
-		this.produto = produto;
+	public void setLivro(Livro livro) {
+		this.livro = livro;
 	}
 
 
@@ -43,12 +60,12 @@ public class Encomenda {
 	}
 
 
-	public String getEnderecoEntrega() {
+	public Endereco getEnderecoEntrega() {
 		return enderecoEntrega;
 	}
 
 
-	public void setEnderecoEntrega(String enderecoEntrega) {
+	public void setEnderecoEntrega(Endereco enderecoEntrega) {
 		this.enderecoEntrega = enderecoEntrega;
 	}
 
@@ -90,6 +107,16 @@ public class Encomenda {
 
 	public void setValorFrete(double valorFrete) {
 		this.valorFrete = valorFrete;
+	}
+
+
+	public String getNumeroPedido() {
+		return numeroPedido;
+	}
+
+
+	public void setNumeroPedido(String numeroPedido) {
+		this.numeroPedido = numeroPedido;
 	}
 	
 	

@@ -1,25 +1,33 @@
 package pessoas;
-
+////////////////////////////////////////////editando....
 import encomenda.CadastroEncomendas;
 import encomenda.Encomenda;
+import livro.Livro;
 
 public class Cliente extends Pessoa {
-	String bonus;
+	double bonus;
 	CadastroEncomendas encomendas;
 	boolean clienteVIP;
 	
-	// construtor
+	// construtores
 	public Cliente(String nome, String cpf) {
 		super(nome, cpf);
+		bonus = 0;
+		clienteVIP = false;
 	}
 
+	public Cliente(String nome, String cpf, String email, Endereco endereco, String telefone) {
+		super(nome, cpf, email, endereco, telefone);
+		bonus = 0;
+		clienteVIP = false;
+	}
 	
 	//getters & setters
-	protected String getBonus() {
+	protected double getBonus() {
 		return bonus;
 	}
 
-	protected void setBonus(String bonus) {
+	protected void setBonus(double bonus) {
 		this.bonus = bonus;
 	}
 
@@ -42,8 +50,18 @@ public class Cliente extends Pessoa {
 	
 	// metodos de negocio
 	
-	public void comprarProduto(Produto produto){
-		
+	public double comprarLivro(String nome, String autor) throws LivroNaoEncontradoException{
+		if(CadastroLivros.existe(nome, autor) && livro.getEstoque() > 0){
+			Livro livro;
+			livro = CadastroLivros.procurar(nome, autor);
+			livro.setEstoque(livro.getEstoque()-1);
+			return livro.getPreco();
+			
+		}else if(!CadastroLivros.existe(nome, autor){
+			throw new LivroNaoEncontradoException();
+		}else{
+			throw new LivroFaltaNoEstoqueException();
+		}
 	}
 	
 	public void ganharBonus(double valorCompra){
@@ -62,8 +80,8 @@ public class Cliente extends Pessoa {
 		
 	}
 	
-	public String consultarEncomenda(Encomenda encomenda){
+	/*public String consultarEncomenda(Encomenda encomenda){
 		
-	}
+	}*/
 
 }

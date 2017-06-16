@@ -1,5 +1,7 @@
 package pessoas;
 
+import livro.Livro;
+
 public class Funcionario extends Pessoa {
 	double salario;
 	double comissao;
@@ -39,7 +41,7 @@ public class Funcionario extends Pessoa {
 	
 	// metodos especificos
 	
-	public void venderProduto(Produto produto){
+	public void venderLivro(Livro livro){
 		
 	}
 	

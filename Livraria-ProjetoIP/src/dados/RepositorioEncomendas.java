@@ -6,6 +6,6 @@ public interface RepositorioEncomendas {
 	public void inserir(Encomenda encomenda);
 	public void atualizar(Encomenda encomenda);
 	public void remover(Encomenda encomenda);
-	//public Encomenda procurar(Produto produto);
-	//public boolean existe(Produto produto);
+	public Encomenda procurar(String numeroPedido);
+	public boolean existe(Encomenda encomenda);
 }

@@ -4,7 +4,7 @@ public abstract class Pessoa {
 	private String nome;
 	private String cpf;
 	private String email;
-	private String endereco;
+	private Endereco endereco;
 	private String telefone;
 	
 	
@@ -13,7 +13,13 @@ public abstract class Pessoa {
 		this.nome = nome;
 		this.cpf = cpf;
 	}
-	
+	public Pessoa(String nome, String cpf, String email, Endereco endereco, String telefone) {
+		this.nome = nome;
+		this.cpf = cpf;
+		this.email = email;
+		this.endereco = endereco;
+		this.telefone = telefone;
+	}
 	
 	
 	// getters & setters
@@ -27,7 +33,7 @@ public abstract class Pessoa {
 	protected String getEmail() {
 		return email;
 	}
-	protected String getEndereco() {
+	protected Endereco getEndereco() {
 		return endereco;
 	}
 	protected void setNome(String nome) {
@@ -39,7 +45,7 @@ public abstract class Pessoa {
 	protected void setEmail(String email) {
 		this.email = email;
 	}
-	protected void setEndereco(String endereco) {
+	protected void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
 	}
 

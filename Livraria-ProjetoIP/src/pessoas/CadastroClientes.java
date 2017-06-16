@@ -9,20 +9,36 @@ public class CadastroClientes {
 		this.clientes = clientes;
 	}
 	
-	public void cadastrar(Cliente cliente){
-		
+	public void cadastrar(Cliente cliente) throws PessoaJaCadastradaException{
+		if(!clientes.existe(cliente.getCpf())){
+			clientes.inserir(cliente);
+		}else{
+			throw new PessoaJaCadastradaException();
+		}
 	}
 	
-	public void remover(Cliente cliente){
-		
+	public void remover(Cliente cliente) throws PessoaNaoEncontradaException{
+		if(clientes.existe(cliente.getCpf())){
+			clientes.remover(cliente);
+		}else{
+			throw new PessoaNaoEncontradaException();
+		}
 	}
 	
-	public void atualizar(Cliente cliente){
-		
+	public void atualizar(Cliente cliente, Cliente clienteAtualizado) throws PessoaNaoEncontradaException{
+		if(clientes.existe(cliente.getCpf())){
+			clientes.atualizar(cliente, clienteAtualizado);
+		}else{
+			throw new PessoaNaoEncontradaException();
+		}
 	}
 	
-	public void procurar(Cliente cliente){
-		
+	public Cliente procurar(String cpf) throws PessoaNaoEncontradaException{
+		if(clientes.existe(cpf)){
+			return clientes.procurar(cpf);
+		}else{
+			throw new PessoaNaoEncontradaException();
+		}
 	}
 	
 }
