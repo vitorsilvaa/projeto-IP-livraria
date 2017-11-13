@@ -1,0 +1,293 @@
+package classeNegocio;
+
+public class Veiculo {
+	
+	private String nome;
+	private String cor;
+	private String chaci;
+	private String placa;
+	private int ano;
+	
+	public Veiculo(String nome, String cor, String chaci, String placa, int ano){
+		this.nome = nome;
+		this.cor = cor;
+		this.chaci = chaci;
+		this.placa = placa;
+		this.ano = ano;
+		
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getCor() {
+		return cor;
+	}
+
+	public void setCor(String cor) {
+		this.cor = cor;
+	}
+
+	public String getChaci() {
+		return chaci;
+	}
+
+	public void setChaci(String chaci) {
+		this.chaci = chaci;
+	}
+
+	public String getPlaca() {
+		return placa;
+	}
+
+	public void setPlaca(String placa) {
+		this.placa = placa;
+	}
+
+	public int getAno() {
+		return ano;
+	}
+
+	public void setAno(int ano) {
+		this.ano = ano;
+	}
+	
+	
+}
+package classeNegocio;
+
+public class Onibus extends Veiculo{
+	
+	private int capacidade;
+	private double comprimento;
+	
+
+	public Onibus(String nome, String cor, String chaci, String placa, int ano, int capacidade, double comprimento) {
+		super(nome, cor, chaci, placa, ano);
+		this.capacidade = capacidade;
+		this.comprimento = comprimento;
+	}
+
+
+	public int getCapacidade() {
+		return capacidade;
+	}
+
+
+	public void setCapacidade(int capacidade) {
+		this.capacidade = capacidade;
+	}
+
+
+	public double getComprimento() {
+		return comprimento;
+	}
+
+
+	public void setComprimento(double comprimento) {
+		this.comprimento = comprimento;
+	}
+
+	
+}
+package classeNegocio;
+import dados.RepositorioVeiculo;
+
+public class CadastroVeiculos {
+	
+	private RepositorioVeiculo veiculos;
+	
+	public CadastroVeiculos(RepositorioVeiculo veiculos){
+		this.veiculos = veiculos;
+	}
+
+	public void cadastra(Veiculo veiculo){
+		if(!veiculos.existe(veiculo.getChaci())){
+			veiculos.inserir(veiculo);
+			
+		}
+	}
+	public void remover(String chaci){
+		if(veiculos.existe(chaci)){
+			veiculos.remover(chaci);
+		}
+	}
+	public void atualizar(String chaci, Veiculo veiculo){
+		if(veiculos.existe(chaci)){
+			veiculos.atualizar(veiculo);
+		}
+	}
+	public Veiculo procurar(String chaci){
+		if(veiculos.existe(chaci)){
+			return veiculos.procurar(chaci);
+		}
+		return null;
+	}
+}
+package dados;
+import classeNegocio.Veiculo;
+
+public interface RepositorioVeiculo {
+	void inserir(Veiculo veiculo);
+	void remover(String chaci);
+	void atualizar(Veiculo veiculo);
+	Veiculo procurar(String chaci);
+	boolean existe(String chaci);
+
+}
+package dados;
+import dados.RepositorioVeiculo;
+import classeNegocio.Veiculo;
+
+public class RepositorioVeiculoArray {
+
+	private Veiculo[] veiculos;
+		private int indice;
+		
+		public RepositorioVeiculoArray(){
+			veiculos = new Veiculo[100];
+			indice = 0;	
+		}
+		
+		public void inserir(Veiculo veiculo){
+			if(this.existe(veiculo.getChaci())){
+				this.veiculos[indice] = veiculo;
+				if(this.indice >= this.veiculos.length-1){
+					Veiculo[] veiculosNovo = new Veiculo[2*this.veiculos.length];
+					for(int i = 0; i < this.veiculos.length; i++){
+						veiculosNovo[i] = this.veiculos[i];
+					}
+					this.veiculos = veiculosNovo;
+				}
+				this.indice++;
+			}
+		}
+		public void remover(String chaci){
+			if(this.equals(chaci)){
+				this.veiculos[this.indice] = this.veiculos[this.indice - 1];
+				this.indice = this.indice - 1;
+			}
+		}
+		public void atualizar(Veiculo veiculo){
+			this.veiculos[getIndice(veiculo.getChaci())] = veiculo;
+		}
+		public Veiculo procurar(String chaci){
+			return this.veiculos[this.getIndice(chaci)];
+		}
+		public boolean existe(String chaci){
+			for(int i = 0;i < this.indice;i++){
+				if(this.veiculos[i].getChaci().equals(chaci)){
+					return true;
+				}
+			}
+			return false;
+		}
+		public int getIndice(String chaci){
+			for(int i = 0;i < this.indice;i++){
+				if(this.veiculos[i].getChaci().equals(chaci)){
+					return i;
+				}
+			}
+			return indice;
+		}
+}
+package dados;
+
+import classeNegocio.Veiculo;
+
+public class RepositorioVeiculoTAD implements RepositorioVeiculo{
+
+	private Veiculo veiculo;
+	private RepositorioVeiculoTAD proximo;
+	
+	public RepositorioVeiculoTAD(){
+		this.veiculo = null;
+		this.proximo = null;
+				
+	}
+	
+	
+	public Veiculo getVeiculo() {
+		return veiculo;
+	}
+
+
+	public void setVeiculo(Veiculo veiculo) {
+		this.veiculo = veiculo;
+	}
+
+
+	public RepositorioVeiculoTAD getProximo() {
+		return proximo;
+	}
+
+
+	public void setProximo(RepositorioVeiculoTAD proximo) {
+		this.proximo = proximo;
+	}
+
+
+	public void inserir(Veiculo veiculo) {
+		if(!this.existe(veiculo.getChaci())){
+			if(this.proximo == null){
+				this.veiculo = veiculo;
+				this.proximo = new RepositorioVeiculoTAD();
+			}else {
+				this.proximo.inserir(veiculo);
+			}
+		}
+		
+	}
+
+	public void remover(String chaci) {
+		if(this.existe(chaci)){
+			if(this.veiculo.equals(chaci)){
+				this.veiculo = this.proximo.veiculo;
+				this.proximo = this.proximo.proximo;
+			}else {
+				this.proximo.remover(chaci);
+			}
+		}
+		
+	}
+
+	public void atualizar(Veiculo novo) {
+		if(this.existe(veiculo.getChaci())){
+			if(this.veiculo.equals(veiculo.getChaci())){
+				this.veiculo = novo;
+			}else {
+				this.proximo.atualizar(novo);
+			}
+		}
+		
+	}
+
+	public Veiculo procurar(String chaci) {
+		if(this.existe(chaci)){
+			if(this.veiculo.getChaci().equals(chaci)){
+				return this.veiculo;
+			}else {
+				return this.proximo.procurar(chaci);
+			}
+		}
+		return null;
+	}
+
+	public boolean existe(String chaci) {
+		boolean encontrou = false;
+		if(this.veiculo != null){
+			if(this.veiculo.getChaci().equals(chaci)){
+				encontrou = true;
+			}else {
+				this.proximo.inserir(veiculo);
+			}
+		}
+		return encontrou;
+	}
+
+}
