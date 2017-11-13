@@ -1,0 +1,14 @@
+package Dados;
+import ClasseNegocio.Veiculo;
+import exceptions.VeiculoJaCadastradoException;
+import exceptions.VeiculoNaoCadastradoException;
+import exceptions.VeiculoNaoEncontradoException;
+
+public interface RepositorioVeiculo {
+	void inserir(Veiculo veiculo) throws  VeiculoJaCadastradoException;
+	void remover(String chaci) throws VeiculoNaoCadastradoException;
+	void atualizar(Veiculo veiculo) throws VeiculoNaoEncontradoException;
+	Veiculo procurar(String chaci) throws VeiculoNaoEncontradoException;
+	boolean existe(String chaci);
+
+}
