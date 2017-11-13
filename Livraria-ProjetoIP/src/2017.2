@@ -1,0 +1,382 @@
+package ClasseNegocio;
+
+public class Veiculo {
+	
+	private String nome;
+	private String cor;
+	private String chaci;
+	private String placa;
+	private int ano;
+	
+	public Veiculo(String nome, String cor, String chaci, String placa, int ano){
+		this.nome = nome;
+		this.cor = cor;
+		this.chaci = chaci;
+		this.placa = placa;
+		this.ano = ano;
+		
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getCor() {
+		return cor;
+	}
+
+	public void setCor(String cor) {
+		this.cor = cor;
+	}
+
+	public String getChaci() {
+		return chaci;
+	}
+
+	public void setChaci(String chaci) {
+		this.chaci = chaci;
+	}
+
+	public String getPlaca() {
+		return placa;
+	}
+
+	public void setPlaca(String placa) {
+		this.placa = placa;
+	}
+
+	public int getAno() {
+		return ano;
+	}
+
+	public void setAno(int ano) {
+		this.ano = ano;
+	}
+	
+	
+}
+package ClasseNegocio;
+
+public class Onibus extends Veiculo{
+	
+	private int capacidade;
+	private double comprimento;
+	
+
+	public Onibus(String nome, String cor, String chaci, String placa, int ano, int capacidade, double comprimento) {
+		super(nome, cor, chaci, placa, ano);
+		this.capacidade = capacidade;
+		this.comprimento = comprimento;
+	}
+
+
+	public int getCapacidade() {
+		return capacidade;
+	}
+
+
+	public void setCapacidade(int capacidade) {
+		this.capacidade = capacidade;
+	}
+
+
+	public double getComprimento() {
+		return comprimento;
+	}
+
+
+	public void setComprimento(double comprimento) {
+		this.comprimento = comprimento;
+	}
+
+	
+}
+package ClasseNegocio;
+import Dados.RepositorioVeiculo;
+import exceptions.VeiculoJaCadastradoException;
+import exceptions.VeiculoNaoCadastradoException;
+import exceptions.VeiculoNaoEncontradoException;
+
+public class CadastroVeiculos {
+	
+	private RepositorioVeiculo veiculos;
+	
+	public CadastroVeiculos(RepositorioVeiculo veiculos){
+		this.veiculos = veiculos;
+	
+	}
+
+	public void cadastra(Veiculo veiculo) throws VeiculoJaCadastradoException{
+		if(!veiculos.existe(veiculo.getChaci())){
+			veiculos.inserir(veiculo);			
+		}
+		else {
+			
+			throw new VeiculoJaCadastradoException();
+		}
+	}
+	
+	public void remover(String chaci) throws VeiculoNaoCadastradoException{
+		if(veiculos.existe(chaci)){
+			veiculos.remover(chaci);		
+		}
+		else {
+			throw new VeiculoNaoCadastradoException();
+		}
+	}
+	
+	public void atualizar(String chaci, Veiculo veiculo) throws VeiculoNaoEncontradoException{
+		if(veiculos.existe(chaci)){
+			veiculos.atualizar(veiculo);		
+		}
+		else {
+			throw new VeiculoNaoEncontradoException();
+		}
+	}
+	
+	public Veiculo procurar(String chaci) throws VeiculoNaoEncontradoException{
+		if(veiculos.existe(chaci)){
+			return veiculos.procurar(chaci);
+		
+		}
+		else {
+			throw new VeiculoNaoEncontradoException();
+		}
+	
+	}
+}
+package Dados;
+import ClasseNegocio.Veiculo;
+import exceptions.VeiculoJaCadastradoException;
+import exceptions.VeiculoNaoCadastradoException;
+import exceptions.VeiculoNaoEncontradoException;
+
+public interface RepositorioVeiculo {
+	void inserir(Veiculo veiculo) throws  VeiculoJaCadastradoException;
+	void remover(String chaci) throws VeiculoNaoCadastradoException;
+	void atualizar(Veiculo veiculo) throws VeiculoNaoEncontradoException;
+	Veiculo procurar(String chaci) throws VeiculoNaoEncontradoException;
+	boolean existe(String chaci);
+
+}
+package Dados;
+
+import ClasseNegocio.Veiculo;
+import exceptions.VeiculoJaCadastradoException;
+import exceptions.VeiculoNaoCadastradoException;
+import exceptions.VeiculoNaoEncontradoException;
+
+
+public class RepositorioVeiculoArray implements RepositorioVeiculo{
+
+	private Veiculo[] veiculos;
+		private int indice;
+		
+		public RepositorioVeiculoArray(){
+			veiculos = new Veiculo[100];
+			indice = 0;	
+		}
+		
+		public void inserir(Veiculo veiculo) throws VeiculoJaCadastradoException{
+			if(this.existe(veiculo.getChaci())){
+				this.veiculos[indice] = veiculo;
+				if(this.indice >= this.veiculos.length-1){
+					Veiculo[] veiculosNovo = new Veiculo[2*this.veiculos.length];
+					for(int i = 0; i < this.veiculos.length; i++){
+						veiculosNovo[i] = this.veiculos[i];
+					}
+					this.veiculos = veiculosNovo;
+				}
+				this.indice++;
+			}
+			else {
+				throw new VeiculoJaCadastradoException();
+			}
+		}
+		
+		public void remover(String chaci) throws VeiculoNaoCadastradoException{
+			if(this.equals(chaci)){
+				this.veiculos[this.indice] = this.veiculos[this.indice - 1];
+				this.indice = this.indice - 1;
+			}
+			else {
+				throw new VeiculoNaoCadastradoException();
+			}
+		}
+		
+		public void atualizar(Veiculo veiculo) throws VeiculoNaoEncontradoException{
+			this.veiculos[getIndice(veiculo.getChaci())] = veiculo;
+		
+		}
+		
+		public Veiculo procurar(String chaci) throws VeiculoNaoEncontradoException{
+			return this.veiculos[this.getIndice(chaci)];
+		
+		}
+		
+		public boolean existe(String chaci) {
+			for(int i = 0;i < this.indice;i++){
+				if(this.veiculos[i].getChaci().equals(chaci)){
+					return true;
+				}
+			}
+			return false;
+		
+		}
+		
+		public int getIndice(String chaci) throws VeiculoNaoEncontradoException{
+			for(int i = 0;i < this.indice;i++){
+				if(this.veiculos[i].getChaci().equals(chaci)){
+					return i;
+				}
+			}
+			throw new  VeiculoNaoEncontradoException();
+		}
+
+}
+package Dados;
+
+import ClasseNegocio.Veiculo;
+import exceptions.VeiculoJaCadastradoException;
+import exceptions.VeiculoNaoCadastradoException;
+import exceptions.VeiculoNaoEncontradoException;
+
+public class RepositorioVeiculoTAD implements RepositorioVeiculo{
+
+	private Veiculo veiculo;
+	private RepositorioVeiculoTAD proximo;
+	
+	public RepositorioVeiculoTAD(){
+		this.veiculo = null;
+		this.proximo = null;
+				
+	}
+	
+	
+	public Veiculo getVeiculo() {
+		return veiculo;
+	}
+
+
+	public void setVeiculo(Veiculo veiculo) {
+		this.veiculo = veiculo;
+	}
+
+
+	public RepositorioVeiculoTAD getProximo() {
+		return proximo;
+	}
+
+
+	public void setProximo(RepositorioVeiculoTAD proximo) {
+		this.proximo = proximo;
+	}
+
+
+	public void inserir(Veiculo veiculo) throws VeiculoJaCadastradoException{
+		if(!this.existe(veiculo.getChaci())){
+			if(this.proximo == null){
+				this.veiculo = veiculo;
+				this.proximo = new RepositorioVeiculoTAD();
+			}else {
+				this.proximo.inserir(veiculo);
+			}
+		}
+		else {
+			throw new VeiculoJaCadastradoException();
+		}
+		
+	}
+
+	public void remover(String chaci) throws VeiculoNaoCadastradoException{
+		if(this.existe(chaci)){
+			if(this.veiculo.equals(chaci)){
+				this.veiculo = this.proximo.veiculo;
+				this.proximo = this.proximo.proximo;
+			}else {
+				this.proximo.remover(chaci);
+			}
+		}
+		else {
+			throw new VeiculoNaoCadastradoException();
+		}
+		
+	}
+
+	public void atualizar(Veiculo novo) throws VeiculoNaoEncontradoException{
+		if(this.existe(veiculo.getChaci())){
+			if(this.veiculo.equals(veiculo.getChaci())){
+				this.veiculo = novo;
+			}else {
+				this.proximo.atualizar(novo);
+			}
+		}
+		else {
+			throw new VeiculoNaoEncontradoException();
+		}
+		
+	}
+
+	public Veiculo procurar(String chaci) throws VeiculoNaoEncontradoException{
+		if(this.existe(chaci)){
+			if(this.veiculo.getChaci().equals(chaci)){
+				return this.veiculo;
+			}else {
+				return this.proximo.procurar(chaci);
+			}
+		}
+		throw new VeiculoNaoEncontradoException();
+	}
+
+	public boolean existe(String chaci)  {
+		boolean encontrou = false;
+		if(this.veiculo != null){
+			if(this.veiculo.getChaci().equals(chaci)){
+				encontrou = true;
+			}else {
+				this.proximo.existe(chaci);
+			}
+		}
+		return encontrou;
+	}
+
+}
+package exceptions;
+
+public class VeiculoJaCadastradoException extends Exception{
+	
+	public VeiculoJaCadastradoException() {
+		super ("VEICULO JA CADASTRADO");
+	}
+
+}
+package exceptions;
+
+public class VeiculoNaoCadastradoException extends Exception{
+
+	public VeiculoNaoCadastradoException() {
+		super ("VEICULO NAO CADASTRADO");
+	}
+}
+package exceptions;
+
+public class VeiculoNaoEncontradoException extends Exception{
+	
+	public VeiculoNaoEncontradoException() {
+		super ("VEICULO NAO ENCONTRADO");
+	}
+
+}
+package exceptions;
+
+public class VeiculoNaoExisteException extends Exception{
+	
+	public VeiculoNaoExisteException() {
+		super ("VEICULO NAO EXISTE");
+	}
+
+}
